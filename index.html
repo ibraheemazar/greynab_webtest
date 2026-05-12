@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GREYNAB — Creative Studios</title>
+<meta name="description" content="Bold ideas, brought to life. Creative and production studio. KSA · UAE · Lebanon."/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #00B04C;
+  --green-glow: #00FF6F;
+  --ink: #0A0A0A;
+  --paper: #EFEEEA;          /* off-white, like Lusion */
+  --paper-2: #E8E7E2;
+  --line: rgba(10,10,10,0.1);
+  --face: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--face);
+  font-weight: 400;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body { overflow-x: hidden; cursor: none; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; cursor: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: none; }
+
+/* === CURSOR === */
+.cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; transform: translate3d(-100px,-100px,0); will-change: transform; }
+.cursor-dot { width: 6px; height: 6px; background: var(--ink); border-radius: 50%; margin: -3px 0 0 -3px; mix-blend-mode: difference; }
+.cursor-dot.green { background: var(--green); }
+.cursor-ring { width: 40px; height: 40px; border: 1.5px solid var(--ink); border-radius: 50%; margin: -20px 0 0 -20px; opacity: 0.6; transition: width 0.3s, height 0.3s, margin 0.3s, background 0.3s; }
+.cursor-ring.hover { width: 80px; height: 80px; margin: -40px 0 0 -40px; background: var(--ink); }
+.cursor-ring.hover + .cursor-label { opacity: 1; }
+.cursor-label { position: fixed; pointer-events: none; z-index: 9999; color: var(--paper); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; opacity: 0; transition: opacity 0.2s; transform: translate3d(-50%, -50%, 0); }
+.dark-mode .cursor-dot { background: var(--paper); }
+.dark-mode .cursor-ring { border-color: var(--paper); }
+.dark-mode .cursor-ring.hover { background: var(--paper); }
+.dark-mode .cursor-label { color: var(--ink); }
+@media (max-width: 900px) { .cursor, .cursor-label { display: none; } body { cursor: auto; } }
+
+/* === NAV === */
+.nav { position: fixed; top: 24px; left: 0; right: 0; z-index: 100; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; }
+.nav-brand { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+.nav-right { display: flex; align-items: center; gap: 8px; }
+.nav-pill { background: rgba(239,238,234,0.7); backdrop-filter: blur(12px); padding: 14px 20px; border-radius: 999px; font-size: 13px; font-weight: 500; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; }
+.nav-pill:hover { background: var(--ink); color: var(--paper); }
+.nav-pill.dark { background: var(--ink); color: var(--paper); }
+.nav-pill.dark:hover { background: var(--green); color: var(--ink); }
+.nav-pill .badge { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+.nav-pill .dots { letter-spacing: -0.15em; font-size: 16px; line-height: 1; }
+.dark-mode .nav-pill { background: rgba(10,10,10,0.5); color: var(--paper); border: 1px solid rgba(239,238,234,0.15); }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.5; } }
+
+/* === HERO === */
+.hero { position: relative; width: 100%; min-height: 100vh; padding: 32px 32px 40px; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
+
+/* The huge curved sweep behind the headline */
+.hero-arc { position: absolute; left: -8%; top: 8%; width: 75vw; height: 95vh; pointer-events: none; }
+.hero-arc svg { width: 100%; height: 100%; }
+.hero-arc circle { fill: none; stroke: var(--green); stroke-width: 60; opacity: 0.95; }
+
+/* G mark in center, behind everything */
+.hero-mark { position: absolute; right: 4vw; top: 30%; width: 60vw; height: 80vh; pointer-events: none; opacity: 0.05; }
+.hero-mark svg { width: 100%; height: 100%; }
+
+.hero-title {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(64px, 17vw, 320px);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-weight: 400;
+  color: var(--ink);
+  max-width: 100%;
+}
+.hero-title .line { display: block; overflow: hidden; padding-bottom: 0.05em; }
+.hero-title .line-inner { display: block; transform: translateY(110%); animation: rise 1.2s cubic-bezier(.2,.7,.2,1) forwards; }
+.hero-title .line:nth-child(1) .line-inner { animation-delay: 0.3s; }
+.hero-title .line:nth-child(2) .line-inner { animation-delay: 0.5s; }
+.hero-title em { font-style: italic; font-weight: 400; }
+.hero-title .green-stroke { -webkit-text-stroke: 2px var(--green); color: transparent; }
+
+@keyframes rise { to { transform: translateY(0); } }
+
+/* Hero meta — top corner with subtitle */
+.hero-meta-top { position: absolute; top: 90px; left: 32px; right: 32px; display: flex; justify-content: space-between; align-items: flex-start; z-index: 5; opacity: 0; animation: fadeIn 0.8s 1.4s forwards; }
+.hero-meta-top .where { font-size: 13px; letter-spacing: 0.04em; color: var(--ink); max-width: 360px; line-height: 1.55; }
+.hero-meta-top .since { font-size: 12px; letter-spacing: 0.04em; color: var(--ink); text-align: right; opacity: 0.7; }
+
+/* Hero footer */
+.hero-foot { position: absolute; bottom: 32px; left: 32px; right: 32px; display: flex; justify-content: space-between; align-items: flex-end; z-index: 5; opacity: 0; animation: fadeIn 0.8s 1.8s forwards; }
+.hero-foot .scroll-cta { display: flex; align-items: center; gap: 14px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+.hero-foot .scroll-cta .arrow-down { width: 36px; height: 36px; border: 1.5px solid var(--ink); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: bob 2s infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+.hero-foot .city-strip { display: flex; gap: 24px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* === SECTION 2: INTRO TEXT BLOCK (Lusion's "We combine") === */
+.intro { padding: 200px 32px 240px; min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; max-width: 1700px; margin: 0 auto; }
+.intro-left h2 { font-size: clamp(40px, 6vw, 96px); font-weight: 400; line-height: 1.0; letter-spacing: -0.025em; }
+.intro-left h2 em { font-style: italic; }
+.intro-left h2 .green { color: var(--green); }
+.intro-right { padding-bottom: 60px; }
+.intro-right p { font-size: clamp(18px, 1.5vw, 22px); line-height: 1.5; max-width: 480px; margin-bottom: 40px; }
+.btn-pill { display: inline-flex; align-items: center; gap: 12px; background: var(--paper); border: 1.5px solid var(--ink); padding: 18px 28px; border-radius: 999px; font-size: 13px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: all 0.3s; }
+.btn-pill:hover { background: var(--ink); color: var(--paper); }
+.btn-pill .dot { width: 7px; height: 7px; background: var(--ink); border-radius: 50%; transition: background 0.3s; }
+.btn-pill:hover .dot { background: var(--green); }
+@media (max-width: 900px) { .intro { grid-template-columns: 1fr; gap: 40px; padding: 100px 22px 120px; } }
+
+/* === SECTION 3: SHOWREEL — full bleed video block === */
+.showreel { padding: 0 32px 200px; }
+.showreel-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 24px; overflow: hidden; background: var(--ink); }
+.showreel-frame img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); }
+.showreel-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.play-btn { width: 120px; height: 120px; background: var(--paper); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; transition: all 0.4s; }
+.play-btn:hover { background: var(--green); transform: scale(1.1); }
+.showreel-frame::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(10,10,10,0.4)); pointer-events: none; }
+.showreel-corner-tag { position: absolute; top: 30px; left: 30px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper); font-weight: 500; z-index: 2; }
+.showreel-corner-tag::before { content: '— '; }
+.showreel-bottom-tag { position: absolute; bottom: 30px; right: 30px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper); font-weight: 500; z-index: 2; }
+
+/* === SECTION 4: FEATURED WORK header === */
+.work-header { padding: 0 32px 80px; max-width: 1700px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-end; gap: 60px; flex-wrap: wrap; }
+.work-header h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; margin-bottom: 20px; }
+.work-header h3::before { content: '— '; }
+.work-header p { font-size: clamp(28px, 3vw, 44px); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; max-width: 640px; }
+.work-header p em { font-style: italic; }
+.work-header .view-link { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; display: inline-flex; align-items: center; gap: 10px; padding-bottom: 6px; border-bottom: 1.5px solid var(--ink); }
+
+/* === WORK 2-COLUMN GRID (this is the Lusion pattern) === */
+.work-grid { padding: 0 32px 200px; max-width: 1700px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 120px 40px; }
+.work-card { display: flex; flex-direction: column; gap: 24px; transition: transform 0.6s cubic-bezier(.2,.7,.2,1); }
+.work-card:nth-child(2n) { margin-top: 120px; }
+.work-card:hover { transform: translateY(-12px); }
+.work-image { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 16px; }
+.work-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
+.work-card:hover .work-image img { transform: scale(1.05); }
+.work-tags { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; opacity: 0.6; }
+.work-tags span { margin: 0 6px; opacity: 0.5; }
+.work-card h4 { font-size: clamp(28px, 3.2vw, 52px); font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; }
+.work-card h4 em { font-style: italic; }
+@media (max-width: 900px) { .work-grid { grid-template-columns: 1fr; gap: 80px; padding: 0 22px 100px; } .work-card:nth-child(2n) { margin-top: 0; } }
+
+/* === SECTION 5: APPROACH — huge type === */
+.approach { padding: 200px 32px; min-height: 100vh; display: flex; align-items: center; }
+.approach-inner { max-width: 1700px; margin: 0 auto; width: 100%; }
+.approach-tag { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; margin-bottom: 40px; }
+.approach-tag::before { content: '— '; }
+.approach-headline { font-size: clamp(48px, 8vw, 152px); font-weight: 400; line-height: 0.95; letter-spacing: -0.035em; max-width: 1500px; }
+.approach-headline em { font-style: italic; }
+.approach-headline .green-fill { color: var(--green); font-style: italic; font-weight: 500; }
+
+/* === SECTION 6: SERVICES — typographic list === */
+.services { background: var(--ink); color: var(--paper); padding: 200px 32px; }
+.services.dark-mode { /* trigger cursor dark */ }
+.services-inner { max-width: 1700px; margin: 0 auto; }
+.services-head { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 80px; border-bottom: 1px solid rgba(239,238,234,0.15); margin-bottom: 0; }
+.services-head h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+.services-head h3::before { content: '— '; }
+.services-head p { font-size: clamp(28px, 3vw, 48px); font-weight: 400; line-height: 1.1; max-width: 700px; }
+.service-row { display: grid; grid-template-columns: 60px 1fr auto auto; gap: 40px; align-items: center; padding: 32px 0; border-bottom: 1px solid rgba(239,238,234,0.15); transition: all 0.4s cubic-bezier(.2,.7,.2,1); }
+.service-row:hover { padding-left: 24px; }
+.service-row:hover .service-name { color: var(--green); }
+.service-row .num { font-size: 12px; letter-spacing: 0.15em; opacity: 0.5; }
+.service-name { font-size: clamp(28px, 3.5vw, 56px); font-weight: 400; letter-spacing: -0.02em; transition: color 0.4s; }
+.service-row .cats { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.5; }
+.service-row .arrow { width: 48px; height: 48px; border: 1px solid rgba(239,238,234,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.4s; }
+.service-row:hover .arrow { background: var(--green); border-color: var(--green); color: var(--ink); transform: rotate(-45deg); }
+@media (max-width: 900px) { .service-row { grid-template-columns: 30px 1fr auto; gap: 16px; } .service-row .cats { display: none; } }
+
+/* === SECTION 7: TRUSTED BY === */
+.trusted { background: var(--paper); padding: 200px 32px; }
+.trusted-inner { max-width: 1700px; margin: 0 auto; }
+.trusted-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 100px; gap: 40px; flex-wrap: wrap; }
+.trusted-head h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+.trusted-head h3::before { content: '— '; }
+.trusted-head p { font-size: clamp(36px, 5vw, 88px); font-weight: 400; line-height: 1.0; letter-spacing: -0.025em; max-width: 1100px; }
+.trusted-head p em { font-style: italic; }
+.trusted-head .count { color: var(--green); font-style: italic; }
+.logo-grid { display: grid; grid-template-columns: repeat(6, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.logo-cell { aspect-ratio: 2 / 1; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: center; padding: 32px; transition: background 0.4s; }
+.logo-cell:hover { background: rgba(0,176,76,0.05); }
+.logo-cell img { max-height: 44px; max-width: 80%; object-fit: contain; filter: grayscale(1) brightness(0.7); opacity: 0.6; transition: all 0.4s; }
+.logo-cell:hover img { filter: grayscale(0) brightness(1); opacity: 1; }
+@media (max-width: 900px) { .logo-grid { grid-template-columns: repeat(3, 1fr); } }
+
+/* === SECTION 8: LET'S WORK TOGETHER — full WebGL floating sticker scene === */
+.cta-section { background: #000; color: var(--paper); padding: 0; min-height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; text-align: center; }
+.cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,176,76,0.18) 0%, transparent 55%); z-index: 1; pointer-events: none; }
+
+/* FALLBACK CSS STICKERS — visible always, behind WebGL */
+.cta-fallback-stickers { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.fb-sticker { position: absolute; object-fit: contain; transition: transform 0.5s cubic-bezier(.2,.7,.2,1); filter: drop-shadow(0 25px 50px rgba(0,255,111,0.15)) drop-shadow(0 10px 30px rgba(0,0,0,0.6)); animation: stickerFloat 8s ease-in-out infinite; }
+.fb-1 { width: 280px; top: 8%; left: 3%; transform: rotate(-10deg); animation-delay: 0s; }
+.fb-2 { width: 300px; top: 4%; right: 5%; transform: rotate(8deg); animation-delay: -1.5s; }
+.fb-3 { width: 260px; bottom: 12%; left: 6%; transform: rotate(-5deg); animation-delay: -3s; }
+.fb-4 { width: 240px; bottom: 8%; right: 6%; transform: rotate(12deg); animation-delay: -4.5s; }
+.fb-5 { width: 220px; top: 18%; left: 26%; transform: rotate(-8deg); animation-delay: -2s; }
+.fb-6 { width: 220px; top: 14%; right: 24%; transform: rotate(10deg); animation-delay: -3.5s; }
+.fb-7 { width: 240px; bottom: 18%; left: 28%; transform: rotate(-12deg); animation-delay: -1s; }
+.fb-8 { width: 200px; bottom: 14%; right: 28%; transform: rotate(6deg); animation-delay: -5s; }
+.fb-9 { width: 170px; top: 38%; left: 2%; transform: rotate(-15deg); border-radius: 12px; animation-delay: -2.5s; }
+.fb-10 { width: 170px; top: 50%; right: 2%; transform: rotate(8deg); border-radius: 12px; animation-delay: -4s; }
+.fb-11 { width: 200px; top: 3%; left: 45%; transform: rotate(-6deg); border-radius: 12px; animation-delay: -1.8s; }
+
+@keyframes stickerFloat {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -20px; }
+}
+
+@media (max-width: 900px) {
+  .fb-sticker { width: 120px !important; }
+  .fb-9, .fb-10, .fb-11 { display: none; }
+}
+
+#stickerCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; transition: opacity 0.8s; }
+#stickerCanvas.loaded { opacity: 1; }
+.cta-content { position: relative; z-index: 5; padding: 0 32px; pointer-events: none; }
+.cta-content > * { pointer-events: auto; }
+.cta-tag { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.75; margin-bottom: 40px; text-shadow: 0 2px 20px rgba(0,0,0,0.8); }
+.cta-headline { font-size: clamp(64px, 14vw, 260px); font-weight: 400; line-height: 0.9; letter-spacing: -0.04em; margin-bottom: 60px; text-shadow: 0 4px 40px rgba(0,0,0,0.85); position: relative; z-index: 5; }
+.cta-headline em { font-style: italic; }
+.cta-headline .green { color: var(--green); font-style: italic; }
+.cta-scroll-cue { display: inline-flex; align-items: center; gap: 12px; padding: 16px 28px; border: 1.5px solid rgba(239,238,234,0.4); border-radius: 999px; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; backdrop-filter: blur(10px); background: rgba(0,0,0,0.4); transition: all 0.3s; }
+.cta-scroll-cue:hover { background: var(--green); border-color: var(--green); color: var(--ink); }
+
+/* fallback twinkles in CSS as well, behind canvas */
+.twinkle { position: absolute; width: 24px; height: 24px; opacity: 0.5; animation: twinkle 3s infinite ease-in-out; z-index: 1; pointer-events: none; }
+.twinkle svg { width: 100%; height: 100%; fill: var(--paper); }
+@keyframes twinkle { 0%, 100% { opacity: 0.15; transform: scale(0.7); } 50% { opacity: 0.9; transform: scale(1.3); } }
+
+/* === FOOTER === */
+footer { background: var(--ink); color: var(--paper); padding: 60px 32px 40px; }
+.footer-inner { max-width: 1700px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; padding-bottom: 60px; border-bottom: 1px solid rgba(239,238,234,0.15); }
+.footer-brand { font-size: 18px; font-weight: 600; margin-bottom: 24px; }
+.footer-brand-blurb { font-size: 13px; line-height: 1.6; opacity: 0.6; max-width: 280px; }
+.footer-col h5 { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.5; margin-bottom: 20px; }
+.footer-col a, .footer-col span { display: block; font-size: 14px; color: var(--paper); opacity: 0.85; margin-bottom: 10px; transition: opacity 0.3s; }
+.footer-col a:hover { opacity: 1; }
+.footer-bot { max-width: 1700px; margin: 30px auto 0; display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.4; }
+@media (max-width: 900px) { .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; } }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor cursor-dot" id="cursorDot"></div>
+<div class="cursor cursor-ring" id="cursorRing"></div>
+<div class="cursor-label" id="cursorLabel">View</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#hero" class="nav-brand">GREYNAB</a>
+  <div class="nav-right">
+    <a href="#cta" class="nav-pill dark"><span class="badge"></span>Let's talk</a>
+    <a href="#" class="nav-pill" id="menuToggle">Menu <span class="dots">••</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-arc">
+    <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">
+      <circle cx="500" cy="500" r="420"/>
+    </svg>
+  </div>
+  <div class="hero-mark">
+    <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet">
+      <g fill="none" stroke="#00B04C" stroke-width="40">
+        <circle cx="250" cy="200" r="150"/>
+        <rect x="250" y="180" width="180" height="40" fill="#00B04C" stroke="none"/>
+        <circle cx="430" cy="200" r="25" fill="#00FF6F" stroke="none"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-meta-top">
+    <div class="where">We create campaigns and films for brands that need both — one studio doing the work of two.</div>
+    <div class="since">EST. 2014 · CREATIVE STUDIOS<br/>RIYADH · BEIRUT · DUBAI</div>
+  </div>
+
+  <h1 class="hero-title">
+    <span class="line"><span class="line-inner">Bold Ideas,</span></span>
+    <span class="line"><span class="line-inner"><em>Brought</em> to Life</span></span>
+  </h1>
+
+  <div class="hero-foot">
+    <a href="#intro" class="scroll-cta">
+      <span class="arrow-down">↓</span>
+      Scroll to explore
+    </a>
+    <div class="city-strip">
+      <span>RIYADH</span><span>BEIRUT</span><span>JEDDAH</span><span>DUBAI</span>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="intro" id="intro">
+  <div class="intro-left">
+    <h2>Where creative ideas <em>become</em> <span class="green">immersive</span> experiences.</h2>
+  </div>
+  <div class="intro-right">
+    <p>We combine strategy, design, motion, and film production to build digital experiences and broadcast work that feels visually striking and technically seamless — from campaign launches to immersive brand worlds.</p>
+    <a href="#approach" class="btn-pill"><span class="dot"></span>Our Approach</a>
+  </div>
+</section>
+
+<!-- SHOWREEL -->
+<section class="showreel">
+  <div class="showreel-frame">
+    <span class="showreel-corner-tag">Showreel · 2026</span>
+    <img src="assets/work/red-sea.jpg" alt="Showreel preview"/>
+    <div class="showreel-overlay">
+      <button class="play-btn">Play Reel</button>
+    </div>
+    <span class="showreel-bottom-tag">02:14 · WATCH FULL</span>
+  </div>
+</section>
+
+<!-- FEATURED WORK -->
+<div class="work-header">
+  <div>
+    <h3>Featured Work</h3>
+    <p>A selection of work made for ambitious brands and <em>forward-thinking</em> teams.</p>
+  </div>
+  <a href="#all-work" class="view-link">See all 47 projects →</a>
+</div>
+
+<div class="work-grid">
+  <div class="work-card">
+    <div class="work-image"><img src="assets/work/red-sea.jpg" alt="Red Sea Global"/></div>
+    <div class="work-tags">PRODUCTION <span>•</span> AERIAL <span>•</span> 4K</div>
+    <h4>Red Sea Global</h4>
+  </div>
+  <div class="work-card">
+    <div class="work-image"><img src="assets/work/bujairi.jpg" alt="Bujairi"/></div>
+    <div class="work-tags">CREATIVE <span>•</span> RAMADAN <span>•</span> CAMPAIGN</div>
+    <h4>Bujairi Terrace</h4>
+  </div>
+  <div class="work-card">
+    <div class="work-image"><img src="assets/work/saib.jpg" alt="SAIB"/></div>
+    <div class="work-tags">BOTH <span>•</span> COMMERCIAL <span>•</span> ROLLOUT</div>
+    <h4>SAIB <em>Commercial</em></h4>
+  </div>
+  <div class="work-card">
+    <div class="work-image"><img src="assets/work/al-muhaidib.jpg" alt="Al Muhaidib"/></div>
+    <div class="work-tags">PRODUCTION <span>•</span> DOCUMENTARY</div>
+    <h4>Al Muhaidib Group</h4>
+  </div>
+  <div class="work-card">
+    <div class="work-image"><img src="assets/work/jazean.jpg" alt="Jazean × AlUla"/></div>
+    <div class="work-tags">CREATIVE <span>•</span> TOURISM <span>•</span> FILM</div>
+    <h4>Jazean × <em>AlUla</em></h4>
+  </div>
+  <div class="work-card">
+    <div class="work-image"><img src="assets/work/al-khafji.jpg" alt="Al Khafji"/></div>
+    <div class="work-tags">PRODUCTION <span>•</span> CORPORATE</div>
+    <h4>Al Khafji</h4>
+  </div>
+</div>
+
+<!-- APPROACH — HUGE TYPE -->
+<section class="approach" id="approach">
+  <div class="approach-inner">
+    <div class="approach-tag">Our Approach</div>
+    <h2 class="approach-headline">
+      We do not chase trends or produce work that looks like <em>everyone else</em>. We build <span class="green-fill">work that lasts</span>.
+    </h2>
+  </div>
+</section>
+
+<!-- SERVICES — DARK -->
+<section class="services dark-mode" id="services">
+  <div class="services-inner">
+    <div class="services-head">
+      <h3>Services</h3>
+      <p>Sixteen capabilities, <em>two practices</em>, one studio.</p>
+    </div>
+    <div class="service-row" data-service>
+      <span class="num">01</span>
+      <span class="service-name">Brand Identity</span>
+      <span class="cats">CREATIVE · STRATEGY</span>
+      <span class="arrow">→</span>
+    </div>
+    <div class="service-row" data-service>
+      <span class="num">02</span>
+      <span class="service-name">Content & <em>Copywriting</em></span>
+      <span class="cats">CREATIVE</span>
+      <span class="arrow">→</span>
+    </div>
+    <div class="service-row" data-service>
+      <span class="num">03</span>
+      <span class="service-name">Social Media Strategy</span>
+      <span class="cats">CREATIVE · PERFORMANCE</span>
+      <span class="arrow">→</span>
+    </div>
+    <div class="service-row" data-service>
+      <span class="num">04</span>
+      <span class="service-name">Performance <em>Marketing</em></span>
+      <span class="cats">CREATIVE · MEDIA</span>
+      <span class="arrow">→</span>
+    </div>
+    <div class="service-row" data-service>
+      <span class="num">05</span>
+      <span class="service-name">Media Planning</span>
+      <span class="cats">CREATIVE · MEDIA</span>
+      <span class="arrow">→</span>
+    </div>
+    <div class="service-row" data-service>
+      <span class="num">06</span>
+      <span class="service-name">Film <em>Production</em></span>
+      <span class="cats">PRODUCTION · DIRECTION</span>
+      <span class="arrow">→</span>
+    </div>
+    <div class="service-row" data-service>
+      <span class="num">07</span>
+      <span class="service-name">Documentary</span>
+      <span class="cats">PRODUCTION · DIRECTION</span>
+      <span class="arrow">→</span>
+    </div>
+    <div class="service-row" data-service>
+      <span class="num">08</span>
+      <span class="service-name">Commercial / <em>TVC</em></span>
+      <span class="cats">PRODUCTION</span>
+      <span class="arrow">→</span>
+    </div>
+  </div>
+</section>
+
+<!-- TRUSTED -->
+<section class="trusted">
+  <div class="trusted-inner">
+    <div class="trusted-head">
+      <div>
+        <h3>Clients</h3>
+        <p>Trusted by <span class="count">sixty-five</span> brands — <em>and counting</em>.</p>
+      </div>
+    </div>
+    <div class="logo-grid">
+      <div class="logo-cell"><img src="assets/logos/red-sea-global.webp" alt="Red Sea Global"/></div>
+      <div class="logo-cell"><img src="assets/logos/pif.jpg" alt="PIF"/></div>
+      <div class="logo-cell"><img src="assets/logos/al-rajhi.png" alt="Al Rajhi"/></div>
+      <div class="logo-cell"><img src="assets/logos/diriyah.png" alt="Diriyah"/></div>
+      <div class="logo-cell"><img src="assets/logos/mea.jpg" alt="MEA"/></div>
+      <div class="logo-cell"><img src="assets/logos/bvlgari.jpg" alt="Bvlgari"/></div>
+      <div class="logo-cell"><img src="assets/logos/dior.png" alt="Dior"/></div>
+      <div class="logo-cell"><img src="assets/logos/samsung.png" alt="Samsung"/></div>
+      <div class="logo-cell"><img src="assets/logos/four-seasons.png" alt="Four Seasons"/></div>
+      <div class="logo-cell"><img src="assets/logos/byd.png" alt="BYD"/></div>
+      <div class="logo-cell"><img src="assets/logos/sfc.png" alt="SFC"/></div>
+      <div class="logo-cell"><img src="assets/logos/antara.png" alt="Antara"/></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA — FULL WEBGL FLOATING STICKER SCENE -->
+<section class="cta-section dark-mode" id="cta">
+  <!-- CSS fallback stickers — always visible, WebGL overlays on top when it loads -->
+  <div class="cta-fallback-stickers">
+    <img class="fb-sticker fb-1" src="assets/icons/performance.jpg" alt=""/>
+    <img class="fb-sticker fb-2" src="assets/icons/copywriting.jpg" alt=""/>
+    <img class="fb-sticker fb-3" src="assets/icons/film.jpg" alt=""/>
+    <img class="fb-sticker fb-4" src="assets/icons/social.jpg" alt=""/>
+    <img class="fb-sticker fb-5" src="assets/icons/brand-identity.jpg" alt=""/>
+    <img class="fb-sticker fb-6" src="assets/icons/media-planning.jpg" alt=""/>
+    <img class="fb-sticker fb-7" src="assets/icons/event.jpg" alt=""/>
+    <img class="fb-sticker fb-8" src="assets/icons/development.jpg" alt=""/>
+    <img class="fb-sticker fb-9" src="assets/work/red-sea.jpg" alt=""/>
+    <img class="fb-sticker fb-10" src="assets/work/bujairi.jpg" alt=""/>
+    <img class="fb-sticker fb-11" src="assets/work/jazean.jpg" alt=""/>
+  </div>
+
+  <canvas id="stickerCanvas"></canvas>
+
+  <div class="cta-content">
+    <div class="cta-tag">Is your big idea ready to go wild?</div>
+    <h2 class="cta-headline">Let's <em>work</em><br/><span class="green">together!</span></h2>
+    <a href="#brief" class="cta-scroll-cue">Start a brief ↓</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">GREYNAB</div>
+      <p class="footer-brand-blurb">Creative studios for ambitious brands. KSA · UAE · Lebanon. Est. 2014.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Studio</h5>
+      <a href="#hero">Home</a>
+      <a href="#approach">Approach</a>
+      <a href="#services">Services</a>
+      <a href="#all-work">Work</a>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <a href="mailto:hello@greynab.com">hello@greynab.com</a>
+      <a href="mailto:business@greynab.com">business@greynab.com</a>
+      <a href="mailto:careers@greynab.com">careers@greynab.com</a>
+    </div>
+    <div class="footer-col">
+      <h5>Cities</h5>
+      <span>Riyadh, KSA</span>
+      <span>Beirut, Lebanon</span>
+      <span>Dubai, UAE</span>
+      <span>Jeddah, KSA</span>
+    </div>
+  </div>
+  <div class="footer-bot">
+    <span>© 2026 GREYNAB CREATIVE STUDIOS</span>
+    <span>Built in-house with ♥</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* CURSOR */
+const cd = document.getElementById('cursorDot');
+const cr = document.getElementById('cursorRing');
+const cl = document.getElementById('cursorLabel');
+let mx=0, my=0, rx=0, ry=0;
+window.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cd.style.transform = `translate3d(${mx}px,${my}px,0)`;
+  cl.style.transform = `translate3d(${mx}px,${my}px,0)`;
+});
+(function loop() {
+  rx += (mx-rx) * 0.18;
+  ry += (my-ry) * 0.18;
+  cr.style.transform = `translate3d(${rx}px,${ry}px,0)`;
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a, button, .work-card, .service-row, .logo-cell').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cr.classList.add('hover');
+    if (el.classList.contains('work-card')) cl.textContent = 'View case';
+    else if (el.classList.contains('service-row')) cl.textContent = 'Learn more';
+    else if (el.classList.contains('play-btn')) cl.textContent = 'Play';
+    else cl.textContent = 'Click';
+  });
+  el.addEventListener('mouseleave', () => cr.classList.remove('hover'));
+});
+
+/* DARK SECTION DETECT for cursor */
+const dark = document.querySelectorAll('.dark-mode');
+function onScroll() {
+  let inDark = false;
+  dark.forEach(d => {
+    const r = d.getBoundingClientRect();
+    if (r.top < window.innerHeight * 0.5 && r.bottom > window.innerHeight * 0.5) inDark = true;
+  });
+  document.body.classList.toggle('dark-mode', inDark);
+  cd.classList.toggle('green', inDark);
+}
+window.addEventListener('scroll', onScroll);
+
+/* ========================================================
+   CTA — REAL 3D FLOATING STICKERS SCENE
+   The Greynab collage cutouts as textured planes in WebGL
+   They drift, float, rotate, and respond to mouse + scroll
+======================================================== */
+const stickerSrcs = [
+  { src: 'assets/icons/performance.jpg', baseSize: 2.4, rot: -0.18, weight: 1.2 },     // dancer + vinyl
+  { src: 'assets/icons/copywriting.jpg', baseSize: 2.6, rot: 0.12, weight: 1.0 },      // typewriter + green hands
+  { src: 'assets/icons/film.jpg', baseSize: 2.2, rot: -0.08, weight: 1.1 },            // cameraman with green orb
+  { src: 'assets/icons/social.jpg', baseSize: 2.0, rot: 0.22, weight: 0.9 },           // two phones + green
+  { src: 'assets/icons/brand-identity.jpg', baseSize: 2.8, rot: -0.14, weight: 1.3 },  // brand identity collage
+  { src: 'assets/icons/media-planning.jpg', baseSize: 2.1, rot: 0.15, weight: 1.0 },   // venus + green moon
+  { src: 'assets/icons/event.jpg', baseSize: 2.3, rot: -0.22, weight: 1.1 },           // event collage
+  { src: 'assets/icons/development.jpg', baseSize: 2.0, rot: 0.10, weight: 0.95 },     // creative dev
+  { src: 'assets/work/red-sea.jpg', baseSize: 2.0, rot: -0.10, weight: 0.85 },
+  { src: 'assets/work/bujairi.jpg', baseSize: 1.8, rot: 0.18, weight: 0.8 },
+  { src: 'assets/work/jazean.jpg', baseSize: 1.9, rot: -0.06, weight: 0.85 },
+];
+
+// Distribute around the headline like Lusion — leave the center clear
+const stickerPositions = [
+  { x: -7.5, y: 3.8, z: 0.5 },     // top-left far
+  { x:  7.6, y: 3.5, z: 0.3 },     // top-right
+  { x: -5.5, y: -3.4, z: 0.8 },    // bottom-left
+  { x:  5.6, y: -3.6, z: 0.2 },    // bottom-right
+  { x: -8.5, y: 0.5, z: -0.3 },    // mid-left far
+  { x:  8.4, y: 0.2, z: -0.5 },    // mid-right far
+  { x: -3.5, y: 4.5, z: 1.2 },     // top-near-left
+  { x:  3.6, y: 4.6, z: 1.0 },     // top-near-right
+  { x: -4.8, y: -1.8, z: 1.5 },    // bottom-mid-left near
+  { x:  4.9, y: -1.5, z: 1.3 },    // bottom-mid-right near
+  { x:  0.2, y: 5.2, z: -1.0 },    // top-center far back
+];
+
+const stickerCanvas = document.getElementById('stickerCanvas');
+const stickerRenderer = new THREE.WebGLRenderer({ canvas: stickerCanvas, alpha: true, antialias: true });
+stickerRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+stickerRenderer.setClearColor(0x000000, 0);
+
+const stickerScene = new THREE.Scene();
+const stickerCam = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+stickerCam.position.set(0, 0, 12);
+
+stickerScene.add(new THREE.AmbientLight(0xffffff, 1.3));
+const greenSpot = new THREE.PointLight(0x00FF6F, 2, 30);
+greenSpot.position.set(0, 0, 3);
+stickerScene.add(greenSpot);
+
+function resizeStickerScene() {
+  const rect = stickerCanvas.getBoundingClientRect();
+  stickerRenderer.setSize(rect.width, rect.height, false);
+  stickerCam.aspect = rect.width / rect.height;
+  stickerCam.updateProjectionMatrix();
+}
+resizeStickerScene();
+window.addEventListener('resize', resizeStickerScene);
+
+const stickerMeshes = [];
+const stickerLoader = new THREE.TextureLoader();
+let texturesLoaded = 0;
+const totalTextures = stickerSrcs.length;
+
+stickerSrcs.forEach((s, i) => {
+  const pos = stickerPositions[i % stickerPositions.length];
+  const tex = stickerLoader.load(
+    s.src,
+    () => {
+      texturesLoaded++;
+      if (texturesLoaded === totalTextures) {
+        // All loaded — show canvas, fade out fallbacks
+        stickerCanvas.classList.add('loaded');
+        document.querySelector('.cta-fallback-stickers').style.opacity = '0';
+        document.querySelector('.cta-fallback-stickers').style.transition = 'opacity 1s';
+      }
+    },
+    undefined,
+    (err) => { console.warn('Texture load failed:', s.src); }
+  );
+  tex.colorSpace = THREE.SRGBColorSpace;
+
+  // Each sticker is a slightly-tilted plane with a transparent material
+  const w = s.baseSize * 1.5;
+  const h = s.baseSize * 1.0;
+  const geo = new THREE.PlaneGeometry(w, h, 1, 1);
+  const mat = new THREE.MeshBasicMaterial({
+    map: tex,
+    transparent: true,
+    side: THREE.DoubleSide
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(pos.x, pos.y, pos.z);
+  mesh.rotation.z = s.rot;
+
+  mesh.userData = {
+    homeX: pos.x,
+    homeY: pos.y,
+    homeZ: pos.z,
+    homeRot: s.rot,
+    weight: s.weight,
+    floatOffset: Math.random() * Math.PI * 2,
+    floatSpeed: 0.4 + Math.random() * 0.5,
+    spinSpeed: (Math.random() - 0.5) * 0.04,
+    bobAmount: 0.15 + Math.random() * 0.25,
+    swayAmount: 0.1 + Math.random() * 0.2
+  };
+
+  stickerScene.add(mesh);
+  stickerMeshes.push(mesh);
+});
+
+// TWINKLING DIAMONDS — small green/white sparkle planes scattered
+const twinkleCount = 25;
+const twinkles = [];
+for (let i = 0; i < twinkleCount; i++) {
+  const sz = 0.15 + Math.random() * 0.25;
+  const geo = new THREE.PlaneGeometry(sz, sz);
+  const isGreen = Math.random() > 0.55;
+  const mat = new THREE.MeshBasicMaterial({
+    color: isGreen ? 0x00FF6F : 0xffffff,
+    transparent: true,
+    opacity: 0.4 + Math.random() * 0.4,
+    blending: THREE.AdditiveBlending
+  });
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(
+    (Math.random() - 0.5) * 22,
+    (Math.random() - 0.5) * 14,
+    (Math.random() - 0.5) * 4 - 1
+  );
+  m.rotation.z = Math.PI / 4;
+  m.userData = {
+    pulseSpeed: 1.5 + Math.random() * 2,
+    pulseOffset: Math.random() * Math.PI * 2,
+    baseOpacity: mat.opacity
+  };
+  stickerScene.add(m);
+  twinkles.push(m);
+}
+
+// Mouse tracking inside the CTA section only
+let ctaMouseX = 0, ctaMouseY = 0;
+let ctaTargetMX = 0, ctaTargetMY = 0;
+document.querySelector('.cta-section').addEventListener('mousemove', e => {
+  const r = e.currentTarget.getBoundingClientRect();
+  ctaTargetMX = ((e.clientX - r.left) / r.width) * 2 - 1;
+  ctaTargetMY = -(((e.clientY - r.top) / r.height) * 2 - 1);
+});
+
+// Detect when section is in view to throttle GPU
+let ctaInView = false;
+const ctaSection = document.querySelector('.cta-section');
+function checkCtaView() {
+  const r = ctaSection.getBoundingClientRect();
+  ctaInView = r.bottom > 0 && r.top < window.innerHeight;
+}
+window.addEventListener('scroll', checkCtaView);
+checkCtaView();
+
+const stickerClock = new THREE.Clock();
+function animateStickers() {
+  requestAnimationFrame(animateStickers);
+  if (!ctaInView) return;
+
+  const t = stickerClock.getElapsedTime();
+  // smooth mouse
+  ctaMouseX += (ctaTargetMX - ctaMouseX) * 0.06;
+  ctaMouseY += (ctaTargetMY - ctaMouseY) * 0.06;
+
+  // Each sticker floats + parallaxes
+  stickerMeshes.forEach((m, i) => {
+    const u = m.userData;
+    const bob = Math.sin(t * u.floatSpeed + u.floatOffset) * u.bobAmount;
+    const sway = Math.cos(t * u.floatSpeed * 0.7 + u.floatOffset) * u.swayAmount;
+
+    // Parallax — heavier stickers (closer) move more with mouse
+    const depthFactor = 1 + u.homeZ * 0.5;
+    m.position.x = u.homeX + sway + ctaMouseX * u.weight * 0.8 * depthFactor;
+    m.position.y = u.homeY + bob + ctaMouseY * u.weight * 0.6 * depthFactor;
+    m.position.z = u.homeZ + Math.sin(t * u.floatSpeed * 0.5 + u.floatOffset) * 0.3;
+
+    // Gentle counter-rotation tied to mouse + slow drift
+    m.rotation.z = u.homeRot + ctaMouseX * 0.08 * u.weight + Math.sin(t * 0.3 + u.floatOffset) * 0.05;
+    m.rotation.y = ctaMouseX * 0.15 * u.weight;
+    m.rotation.x = -ctaMouseY * 0.1 * u.weight;
+  });
+
+  // Twinkles pulse
+  twinkles.forEach(tw => {
+    const u = tw.userData;
+    tw.material.opacity = u.baseOpacity * (0.4 + 0.6 * Math.abs(Math.sin(t * u.pulseSpeed + u.pulseOffset)));
+    tw.rotation.z += 0.005;
+  });
+
+  // Camera subtly follows mouse
+  stickerCam.position.x = ctaMouseX * 0.6;
+  stickerCam.position.y = ctaMouseY * 0.4;
+  stickerCam.lookAt(0, 0, 0);
+
+  stickerRenderer.render(stickerScene, stickerCam);
+}
+animateStickers();
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href === '#' || !href.startsWith('#')) return;
+    const t = document.querySelector(href);
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+// Initial check
+onScroll();
+</script>
+
+</body>
+</html>
